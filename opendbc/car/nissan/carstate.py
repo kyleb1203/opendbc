@@ -39,6 +39,9 @@ class CarState(CarStateBase):
       ret.gas = cp.vl["GAS_PEDAL"]["GAS_PEDAL"]
     elif self.CP.carFingerprint in (CAR.NISSAN_LEAF, CAR.NISSAN_LEAF_IC):
       ret.gas = cp.vl["CRUISE_THROTTLE"]["GAS_PEDAL"]
+    
+    if self.CP.carFingerprint in (CAR.NISSAN_LEAF, CAR.NISSAN_LEAF_IC):
+       ret.throttle = cp.v1["THROTTLE"]["THROTTLE_CONTROL"]
 
     ret.gasPressed = bool(ret.gas > 3)
 
@@ -46,6 +49,9 @@ class CarState(CarStateBase):
       ret.brakePressed = bool(cp.vl["DOORS_LIGHTS"]["USER_BRAKE_PRESSED"])
     elif self.CP.carFingerprint in (CAR.NISSAN_LEAF, CAR.NISSAN_LEAF_IC):
       ret.brakePressed = bool(cp.vl["CRUISE_THROTTLE"]["USER_BRAKE_PRESSED"])
+      
+    if self.CP.carFingerprint in (CAR.NISSAN_LEAF, CAR.NISSAN_LEAF_IC):
+       ret.brakePressure = cp.v1["BRAKE_PEDAL"]["BRAKE_PRESSURE"]
 
     ret.wheelSpeeds = self.get_wheel_speeds(
       cp.vl["WHEEL_SPEEDS_FRONT"]["WHEEL_SPEED_FL"],
@@ -156,6 +162,7 @@ class CarState(CarStateBase):
     elif CP.carFingerprint in (CAR.NISSAN_LEAF, CAR.NISSAN_LEAF_IC):
       pt_messages += [
         ("BRAKE_PEDAL", 100),
+        ("THROTTLE", 100),
         ("CRUISE_THROTTLE", 50),
         ("CANCEL_MSG", 50),
         ("HUD_SETTINGS", 25),
